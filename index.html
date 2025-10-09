@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Control de Portones</title>
+    
+    <!-- Manifest para PWA -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvbnRyb2wgZGUgUG9ydG9uZXMiLAogICJzaG9ydF9uYW1lIjogIlBvcnRvbmVzIiwKICAiZGVzY3JpcHRpb24iOiAiQ29udHJvbCByw6FwaWRvIGRlIHBvcnRvbmVzIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTFhMmUiLAogICJ0aGVtZV9jb2xvciI6ICIjMWExYTJlIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNTYgMjU2JyUzRSUzQ2NpcmNsZSBjeD0nMTI4JyBjeT0nMTI4JyByPScxMjgnIGZpbGw9JyUyMzRhZjZhNicvJTNFJTNDZyBzdHJva2U9JyUyMzFhNDAzYScgc3Ryb2tlLXdpZHRoPSc4JyBmaWxsPSdub25lJyBzdHJva2UtbGluZWNhcD0ncm91bmQnJTNFJTNDcGF0aCBkPSdNNzUgMTQwaDEwNnYzMEg3NXonLyUzRSUzQ3JlY3QgeD0nODAnIHk9JzE0MCcgd2lkdGg9JzE4JyBoZWlnaHQ9JzMwJy8lM0UlM0NyZWN0IHg9JzEwNScgeT0nMTQwJyB3aWR0aD0nMTgnIGhlaWdodD0nMzAnLyUzRSUzQ3JlY3QgeD0nMTMwJyB5PScxNDAnIHdpZHRoPScxOCcgaGVpZ2h0PSczMCcvJTNFJTNDcmVjdCB4PScxNTUnIHk9JzE0MCcgd2lkdGg9JzE4JyBoZWlnaHQ9JzMwJy8lM0UlM0NwYXRoIGQ9J003OCAxMzhoMTAwJy8lM0UlM0NwYXRoIGQ9J004MCAxMjBoOTYnLyUzRSUzQy9nJTNFJTNDZyBzdHJva2U9JyUyMzFhNDAzYScgc3Ryb2tlLXdpZHRoPSc2JyBmaWxsPSdub25lJyBzdHJva2UtbGluZWNhcD0ncm91bmQnJTNFJTNDcGF0aCBkPSdNOTAgOTVjMTAtMTAgMjYtMTAgMzYgMHMxMCAyNiAwIDM2Jy8lM0UlM0NwYXRoIGQ9J00xMDUgODBjMTgtMTggNDgtMTggNjYgMHMxOCA0OCAwIDY2Jy8lM0UlM0NwYXRoIGQ9J00xMjAgNjVjMjYtMjYgNjgtMjYgOTQgMHMyNiA2OCAwIDk0Jy8lM0UlM0MvZyUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMiclM0UlM0NjaXJjbGUgY3g9JzI1NicgY3k9JzI1Nicgcj0nMjU2JyBmaWxsPSclMjM0YWY2YTYnLyUzRSUzQ2cgc3Ryb2tlPSclMjMxYTQwM2EnIHN0cm9rZS13aWR0aD0nMTYnIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCclM0UlM0NwYXRoIGQ9J00xNTAgMjgwaDIxMnY2MEgxNTB6Jy8lM0UlM0NyZWN0IHg9JzE2MCcgeT0nMjgwJyB3aWR0aD0nMzYnIGhlaWdodD0nNjAnLyUzRSUzQ3JlY3QgeD0nMjEwJyB5PScyODAnIHdpZHRoPSczNicgaGVpZ2h0PSc2MCcvJTNFJTNDcmVjdCB4PScyNjAnIHk9JzI4MCcgd2lkdGg9JzM2JyBoZWlnaHQ9JzYwJy8lM0UlM0NyZWN0IHg9JzMxMCcgeT0nMjgwJyB3aWR0aD0nMzYnIGhlaWdodD0nNjAnLyUzRSUzQ3BhdGggZD0nTTE1NiAyNzZoMjAwJy8lM0UlM0NwYXRoIGQ9J00xNjAgMjQwaDE5MicvJTNFJTNDL2clM0UlM0NnIHN0cm9rZT0nJTIzMWE0MDNhJyBzdHJva2Utd2lkdGg9JzEyJyBmaWxsPSdub25lJyBzdHJva2UtbGluZWNhcD0ncm91bmQnJTNFJTNDcGF0aCBkPSdNMTgwIDE5MGMyMC0yMCA1Mi0yMCA3MiAwczIwIDUyIDAgNzInLyUzRSUzQ3BhdGggZD0nTTIxMCAxNjBjMzYtMzYgOTYtMzYgMTMyIDBzMzYgOTYgMCAxMzInLyUzRSUzQ3BhdGggZD0nTTI0MCAxMzBjNTItNTIgMTM2LTUyIDE4OCAwczUyIDEzNiAwIDE4OCcvJTNFJTNDL2clM0UlM0MvZyUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #4af6a6 0%, #3ed598 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(74, 246, 166, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .main-icon svg {
+            width: 50px;
+            height: 50px;
+            stroke: #1a403a;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #4af6a6, #6ba7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .gate-button {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gate-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .gate-button:hover::before {
+            left: 100%;
+        }
+
+        .gate-button:active {
+            transform: scale(0.98);
+        }
+
+        .gate-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(74, 246, 166, 0.5);
+            box-shadow: 0 8px 20px rgba(74, 246, 166, 0.2);
+        }
+
+        .button-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4af6a6, #3ed598);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .button-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            fill: none;
+        }
+
+        .button-content {
+            flex: 1;
+        }
+
+        .button-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .button-number {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+
+        .install-prompt {
+            margin-top: 30px;
+            padding: 16px;
+            background: rgba(255, 215, 61, 0.1);
+            border: 1px solid rgba(255, 215, 61, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            display: none;
+        }
+
+        .install-prompt.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .install-button {
+            margin-top: 12px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #ffd93d, #ffb800);
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .install-button:active {
+            transform: scale(0.95);
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+        }
+
+        .share-info {
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(107, 167, 255, 0.1);
+            border: 1px solid rgba(107, 167, 255, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .share-info strong {
+            color: #6ba7ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-icon">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Portón -->
+                    <path d="M4 14h16v6H4z"/>
+                    <rect x="4.5" y="14" width="1.5" height="6"/>
+                    <rect x="7.5" y="14" width="1.5" height="6"/>
+                    <rect x="10.5" y="14" width="1.5" height="6"/>
+                    <rect x="13.5" y="14" width="1.5" height="6"/>
+                    <rect x="16.5" y="14" width="1.5" height="6"/>
+                    <path d="M4.2 13.5h15.6"/>
+                    <path d="M4.5 12h15"/>
+                    <!-- Ondas WiFi -->
+                    <path d="M7 9c1.5-1.5 4-1.5 5.5 0s1.5 4 0 5.5" stroke-width="1.5"/>
+                    <path d="M9 7c2.5-2.5 6.5-2.5 9 0s2.5 6.5 0 9" stroke-width="1.5"/>
+                    <path d="M11 5c3.5-3.5 9-3.5 12.5 0s3.5 9 0 12.5" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <h1>Control de Portones</h1>
+            <p class="subtitle">Toca para abrir cada portón</p>
+        </div>
+
+        <div class="buttons-container">
+            <a href="tel:+56959584138" class="gate-button">
+                <div class="button-icon">
+                    <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21V8l3-3 3 3v13M9 21h6M5 21v-6m14 6v-6"/>
+                    </svg>
+                </div>
+                <div class="button-content">
+                    <div class="button-title">Entrada Calle</div>
+                    <div class="button-number">+56 9 5958 4138</div>
+                </div>
+            </a>
+
+            <a href="tel:+56959711216" class="gate-button">
+                <div class="button-icon">
+                    <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 21V11l-3-3-3 3v10M7 21h6M15 21v-6m4 6v-6"/>
+                    </svg>
+                </div>
+                <div class="button-content">
+                    <div class="button-title">Salida Calle</div>
+                    <div class="button-number">+56 9 5971 1216</div>
+                </div>
+            </a>
+
+            <a href="tel:+56985250145" class="gate-button">
+                <div class="button-icon">
+                    <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </div>
+                <div class="button-content">
+                    <div class="button-title">Interior Casa</div>
+                    <div class="button-number">+56 9 8525 0145</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="install-prompt" id="installPrompt">
+            <strong>📲 Instala esta app</strong>
+            <p style="margin-top: 8px;">Añade esta aplicación a tu pantalla de inicio para acceso rápido</p>
+            <button class="install-button" id="installButton">Instalar Ahora</button>
+        </div>
+
+        <div class="share-info">
+            <strong>📤 Para compartir:</strong>
+            <p style="margin-top: 8px;">Copia y comparte el enlace de esta página. Tu familia/amigos solo deben abrirlo en su navegador y añadirlo a su pantalla de inicio.</p>
+        </div>
+
+        <div class="footer">
+            Control de Portones • Versión 1.0
+        </div>
+    </div>
+
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        document.getElementById('installButton').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response: ${outcome}`);
+                deferredPrompt = null;
+                document.getElementById('installPrompt').classList.remove('show');
+            }
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZXZlbnQpIHsKICBldmVudC53YWl0VW50aWwoc2VsZi5za2lwV2FpdGluZygpKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2FjdGl2YXRlJywgZnVuY3Rpb24oZXZlbnQpIHsKICBldmVudC53YWl0VW50aWwoc2VsZi5jbGllbnRzLmNsYWltKCkpOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBmdW5jdGlvbihldmVudCkgewogIGV2ZW50LnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpLnRoZW4oZnVuY3Rpb24ocmVzcG9uc2UpIHsKICAgICAgcmV0dXJuIHJlc3BvbnNlIHx8IGZldGNoKGV2ZW50LnJlcXVlc3QpOwogICAgfSkKICApOwp9KTs=');
+        }
+
+        // Haptic feedback on button press
+        document.querySelectorAll('.gate-button').forEach(button => {
+            button.addEventListener('click', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
