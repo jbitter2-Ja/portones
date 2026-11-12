@@ -298,19 +298,11 @@ function renderApps() {
 document.querySelectorAll("[data-app]").forEach(b => {
   b.onclick = () => { if (navigator.vibrate) navigator.vibrate(12); call("/api/app", { app: b.dataset.app }); };
 });
-// El paquete de Gtd TV no es público: se aprende la primera vez desde la app abierta en el TV.
-function learnGtd() {
-  if (!currentApp) return toast("Abre Gtd TV en el televisor y vuelve a tocar este botón.");
-  if (confirm("¿Guardar la app abierta ahora en el TV (" + currentApp + ") como Gtd TV?")) {
-    store("gtd", currentApp); toast("Listo: botón Gtd TV configurado.");
-  }
-}
+// GTD SmartTV (Grupo Gtd) en Google Play: tv.gtd.atv
 $("gtd").onclick = () => {
-  const id = store("gtd");
   if (navigator.vibrate) navigator.vibrate(12);
-  if (id) call("/api/app", { app: id }); else learnGtd();
+  call("/api/app", { app: "tv.gtd.atv" });
 };
-$("gtd").oncontextmenu = e => { e.preventDefault(); learnGtd(); };
 
 /* ---- texto ---- */
 function sendText() {

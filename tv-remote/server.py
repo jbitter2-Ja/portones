@@ -374,7 +374,7 @@ async def main() -> None:
 
     server = await asyncio.start_server(handle, args.host, args.port)
     shown = lan_ip() if args.host == "0.0.0.0" else args.host
-    log.info("Control remoto v5 listo. Abre en el celular:  http://%s:%d", shown, args.port)
+    log.info("Control remoto v6 listo. Abre en el celular:  http://%s:%d", shown, args.port)
     async with server:
         await server.serve_forever()
 

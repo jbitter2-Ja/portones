@@ -52,8 +52,8 @@ El certificado queda guardado en `data/`, así que no se vuelve a pedir.
 - Escribir texto en el TV desde el teclado del celular
 - Botones de acceso directo como los del control físico: Gtd TV, Netflix,
   YouTube y Prime Video, además de Todas las apps y TV en vivo
-- El botón **Gtd TV** se configura solo: abre Gtd TV en el televisor y tócalo
-  una vez para guardarlo (mantenlo presionado para cambiarlo)
+- El botón **Gtd TV** abre GTD SmartTV (`tv.gtd.atv`); si el Box muestra su
+  ficha de Play Store, el servidor pulsa "Abrir" automáticamente
 - Más accesos a apps; **＋ App actual** guarda la app abierta en el TV
   (mantén presionado un acceso propio para quitarlo)
 
