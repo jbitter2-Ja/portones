@@ -195,25 +195,32 @@ class TV:
         if "://" not in link:
             if self._store_task:
                 self._store_task.cancel()
-            self._store_task = asyncio.create_task(self._open_from_store())
+            self._store_task = asyncio.create_task(self._open_from_store(link))
 
-    async def _open_from_store(self) -> None:
+    async def _open_from_store(self, target: str) -> None:
         """Algunas apps (p. ej. Gtd TV) no se abren directo: el TV muestra su ficha de
         Play Store con el botón "Abrir" enfocado. Si eso ocurre, se pulsa OK."""
-        for _ in range(20):
+        seen = None
+        for _ in range(40):  # hasta 10 s
             await asyncio.sleep(0.25)
             remote = self.remote
             if not remote or self.state != "connected":
                 return
-            if remote.current_app == PLAY_STORE:
-                await asyncio.sleep(1.5)  # deja que la ficha termine de cargar
+            if remote.current_app != seen:
+                seen = remote.current_app
+                log.info("  app en pantalla: %s", seen)
+            if seen == target:
+                return
+            if seen == PLAY_STORE:
+                await asyncio.sleep(2)  # deja que la ficha termine de cargar
                 if remote.current_app == PLAY_STORE:
                     try:
                         remote.send_key_command("DPAD_CENTER")
-                        log.info("Ficha de Play Store detectada: se pulsó Abrir")
+                        log.info("  ficha de Play Store detectada: se pulsó Abrir")
                     except ConnectionClosed:
                         pass
                 return
+        log.info("  la app no cambió tras 10 s (en pantalla: %s)", seen)
 
     def status(self) -> dict:
         out = {"state": self.state, "host": self.host, "name": self.name}
@@ -367,7 +374,7 @@ async def main() -> None:
 
     server = await asyncio.start_server(handle, args.host, args.port)
     shown = lan_ip() if args.host == "0.0.0.0" else args.host
-    log.info("Control remoto listo. Abre en el celular:  http://%s:%d", shown, args.port)
+    log.info("Control remoto v5 listo. Abre en el celular:  http://%s:%d", shown, args.port)
     async with server:
         await server.serve_forever()
 
