@@ -31,7 +31,7 @@ para tenerlo como app.
 
 ```bash
 pkg install python python-cryptography git
-git clone -b ccr-92c67ea7-8sjjsk https://github.com/jbitter2-ja/portones && cd portones/tv-remote
+git clone https://github.com/jbitter2-ja/portones && cd portones/tv-remote
 pip install -r requirements.txt
 python server.py --port 8765   # y abrir http://localhost:8765
 ```
