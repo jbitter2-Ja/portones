@@ -251,6 +251,9 @@ async def route(method: str, path: str, body: dict) -> dict:
         return {"devices": await discover()}
     if method != "POST":
         raise ApiError("No encontrado.", 404)
+    if path in ("/api/key", "/api/app", "/api/text"):
+        detail = body.get("key") or body.get("app") or "(texto)"
+        log.info("%s %s  [TV: %s]", path.rsplit("/", 1)[-1], detail, tv.state)
     if path == "/api/pair/start":
         await tv.pair_start(valid_host(body.get("host")))
     elif path == "/api/pair/finish":
