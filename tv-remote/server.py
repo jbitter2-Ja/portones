@@ -35,6 +35,8 @@ CLIENT_NAME = "Control Web"
 SERVICE = "_androidtvremote2._tcp.local."
 KEY_RE = re.compile(r"^[A-Z0-9_]{1,40}$")
 PLAY_STORE = "com.android.vending"
+STORE_URL = "https://play.google.com/store/apps/details?id="
+PACKAGE_RE = re.compile(r"^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)+$")
 DIRECTIONS = {"SHORT", "START_LONG", "END_LONG"}
 MAX_BODY = 16 * 1024
 
@@ -188,11 +190,17 @@ class TV:
     def app(self, link: str) -> None:
         if not link or len(link) > 300 or any(c.isspace() for c in link):
             raise ApiError("App no válida.")
+        is_package = "://" not in link
+        if is_package and not PACKAGE_RE.match(link):
+            raise ApiError("App no válida.")
+        # Este Box rechaza "market://launch?id=...", así que las apps indicadas por
+        # nombre de paquete se abren mediante su ficha de Play Store + "Abrir".
+        target = STORE_URL + link if is_package else link
         try:
-            self._ready().send_launch_app_command(link)
+            self._ready().send_launch_app_command(target)
         except ConnectionClosed as exc:
             raise ApiError("Sin conexión con el TV.", 503) from exc
-        if "://" not in link:
+        if is_package:
             if self._store_task:
                 self._store_task.cancel()
             self._store_task = asyncio.create_task(self._open_from_store(link))
@@ -374,7 +382,7 @@ async def main() -> None:
 
     server = await asyncio.start_server(handle, args.host, args.port)
     shown = lan_ip() if args.host == "0.0.0.0" else args.host
-    log.info("Control remoto v6 listo. Abre en el celular:  http://%s:%d", shown, args.port)
+    log.info("Control remoto v7 listo. Abre en el celular:  http://%s:%d", shown, args.port)
     async with server:
         await server.serve_forever()
 
