@@ -31,9 +31,9 @@ para tenerlo como app.
 
 ```bash
 pkg install python python-cryptography git
-git clone https://github.com/jbitter2-ja/portones && cd portones/tv-remote
+git clone -b ccr-92c67ea7-8sjjsk https://github.com/jbitter2-ja/portones && cd portones/tv-remote
 pip install -r requirements.txt
-python server.py        # y abrir http://localhost:8080
+python server.py --port 8765   # y abrir http://localhost:8765
 ```
 
 ## Vinculación (una sola vez)
@@ -50,7 +50,11 @@ El certificado queda guardado en `data/`, así que no se vuelve a pedir.
 - Volumen, silencio, canales, Guía, Info y controles de reproducción
 - Mantener presionado: repite (cruceta, volumen, canal) o pulsación larga (OK, Inicio)
 - Escribir texto en el TV desde el teclado del celular
-- Accesos directos a apps; **＋ App actual** guarda la app abierta en el TV
+- Botones de acceso directo como los del control físico: Gtd TV, Netflix,
+  YouTube y Prime Video, además de Todas las apps y TV en vivo
+- El botón **Gtd TV** se configura solo: abre Gtd TV en el televisor y tócalo
+  una vez para guardarlo (mantenlo presionado para cambiarlo)
+- Más accesos a apps; **＋ App actual** guarda la app abierta en el TV
   (mantén presionado un acceso propio para quitarlo)
 
 ## Opciones
