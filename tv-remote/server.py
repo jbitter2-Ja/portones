@@ -34,6 +34,7 @@ INDEX = BASE / "static" / "index.html"
 CLIENT_NAME = "Control Web"
 SERVICE = "_androidtvremote2._tcp.local."
 KEY_RE = re.compile(r"^[A-Z0-9_]{1,40}$")
+PLAY_STORE = "com.android.vending"
 DIRECTIONS = {"SHORT", "START_LONG", "END_LONG"}
 MAX_BODY = 16 * 1024
 
@@ -55,6 +56,7 @@ class TV:
         self.name: str | None = None
         self.state = "unconfigured"  # unconfigured | pairing | connecting | connected | needs_pairing
         self._task: asyncio.Task | None = None
+        self._store_task: asyncio.Task | None = None
 
     # -- persistencia -------------------------------------------------------
     def load(self) -> None:
@@ -190,6 +192,28 @@ class TV:
             self._ready().send_launch_app_command(link)
         except ConnectionClosed as exc:
             raise ApiError("Sin conexión con el TV.", 503) from exc
+        if "://" not in link:
+            if self._store_task:
+                self._store_task.cancel()
+            self._store_task = asyncio.create_task(self._open_from_store())
+
+    async def _open_from_store(self) -> None:
+        """Algunas apps (p. ej. Gtd TV) no se abren directo: el TV muestra su ficha de
+        Play Store con el botón "Abrir" enfocado. Si eso ocurre, se pulsa OK."""
+        for _ in range(20):
+            await asyncio.sleep(0.25)
+            remote = self.remote
+            if not remote or self.state != "connected":
+                return
+            if remote.current_app == PLAY_STORE:
+                await asyncio.sleep(1.5)  # deja que la ficha termine de cargar
+                if remote.current_app == PLAY_STORE:
+                    try:
+                        remote.send_key_command("DPAD_CENTER")
+                        log.info("Ficha de Play Store detectada: se pulsó Abrir")
+                    except ConnectionClosed:
+                        pass
+                return
 
     def status(self) -> dict:
         out = {"state": self.state, "host": self.host, "name": self.name}
